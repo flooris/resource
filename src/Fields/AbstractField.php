@@ -34,7 +34,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected bool $searchable = false;
     protected bool $sortable = false;
     protected mixed $default = null;
-    protected null|string|boolean $placeholder = null;
+    protected null|string|bool $placeholder = null;
     protected bool $required = false;
     protected bool $editable = true;
 
@@ -268,11 +268,12 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
             if (Lang::has($resourceKey)) {
                 $this->placeholder = __($resourceKey);
-            } else {
-                $generalKey        = "entities.general.fields.$this->name.placeholder";
-                $this->placeholder = __($generalKey);
+
+                return;
             }
         }
+
+        $this->placeholder = __("entities.general.fields.$this->name.placeholder");
     }
 
 
