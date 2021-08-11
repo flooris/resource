@@ -123,7 +123,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         });
 
         return $query
-            ->allowedFilters($this->filters->getAllowedFilters())
+            ->allowedFilters($this->filters->getAllowedFilters()->toArray())
             ->allowedSorts($this->fields->getSortable()->getQualifiedAttributes())
             ->with($this->fields->getUniqueRelations()->toArray())
             ->withCount($this->fields->getRelationsToCount()->toArray())
@@ -195,7 +195,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
             'collection' => $this->result->getCollection(),
             'columns'    => $this->fields->toColumn(),
             'pagination' => $this->pagination(),
-            'filters'    => $this->filters->keyByName(),
+            'filters'    => $this->filters->resolve($this->request)->keyByName(),
             'request'    => $this->requestParameters(),
         ], $this->additional);
     }

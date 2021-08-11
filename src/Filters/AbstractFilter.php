@@ -9,6 +9,8 @@ use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Contracts\Support\Arrayable;
 use Flooris\Resource\Interfaces\Makeable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 abstract class AbstractFilter implements Filter, JsonSerializable, Arrayable, Responsable, Makeable
 {
@@ -17,6 +19,7 @@ abstract class AbstractFilter implements Filter, JsonSerializable, Arrayable, Re
     protected string $internalName;
     protected string $label;
     protected ?string $placeholder = null;
+    protected mixed $value;
 
     protected string $component = 'SelectFilter';
     protected mixed $default = null;
@@ -117,6 +120,18 @@ abstract class AbstractFilter implements Filter, JsonSerializable, Arrayable, Re
         return $allowedFilter;
     }
 
+    public function resolve(Request $request): void
+    {
+        $this->resolveValue($request);
+    }
+
+    protected function resolveValue(Request $request)
+    {
+        $this->value = QueryBuilderRequest::fromRequest($request)
+            ->filters()
+            ->get($this->name, $this->default);
+    }
+
     public function toArray(): array
     {
         return [
@@ -127,6 +142,7 @@ abstract class AbstractFilter implements Filter, JsonSerializable, Arrayable, Re
             'ignored'     => $this->ignored,
             'options'     => $this->options,
             'placeholder' => $this->placeholder,
+            'value'       => $this->value ?? $this->default,
         ];
     }
 
