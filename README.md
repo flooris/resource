@@ -1,0 +1,1 @@
+# Flooris Laravel Resource
