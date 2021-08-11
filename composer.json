@@ -1,0 +1,33 @@
+{
+    "name": "flooris/resource",
+    "type": "library",
+    "description": "PHP Laravel package for moneyphp/money implementation",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Rik Zwarthoff",
+            "email": "zwarthoff@gmail.com"
+        },
+        {
+            "name": "Florian Kwakkenbos",
+            "email": "f.kwakkenbos@flooris.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0",
+        "illuminate/config": "^7.0|^8.0",
+        "kirschbaum-development/eloquent-power-joins": "^2.4",
+        "spatie/laravel-json-api-paginate": "^1.10",
+        "spatie/laravel-query-builder": "^3.3",
+        "flooris/laravel-money": "^0.1"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Flooris\\Resource\\": "src"
+        }
+    }
+}
