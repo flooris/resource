@@ -20,6 +20,6 @@ class FieldUrl extends AbstractFieldLink
 
     public function resolve(mixed $resource): void
     {
-        $this->href ?: call_user_func($this->callback, $resource);
+        $this->href = $this->href ?? call_user_func($this->callback, $resource);
     }
 }

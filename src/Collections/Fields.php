@@ -29,6 +29,13 @@ class Fields extends Collection
             $field->resolve($resource);
         });
     }
+    
+    public function resolveLabels(mixed $resource): static
+    {
+        return $this->each(function (Field $field) use ($resource) {
+            $field->resolveLabel($resource);
+        });
+    }
 
     public function resolveQualifiedAttributes(mixed $model): static
     {

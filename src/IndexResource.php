@@ -139,7 +139,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         return match (true) {
             $this->subject instanceof Model => $this->subject,
             $this->subject instanceof Builder => $this->subject->getModel(),
-            $this->subject instanceof Relation => $this->subject->getParent(),
+            $this->subject instanceof Relation => $this->subject->getChild(),
             default => null,
         };
     }
@@ -193,7 +193,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
 
         return array_merge([
             'collection' => $this->result->getCollection(),
-            'columns'    => $this->fields->toColumn(),
+            'columns'    => $this->fields->resolveLabels($this->getModel())->toColumn(),
             'pagination' => $this->pagination(),
             'filters'    => $this->filters->resolve($this->request)->keyByName(),
             'request'    => $this->requestParameters(),

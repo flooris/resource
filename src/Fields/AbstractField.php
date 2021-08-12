@@ -225,7 +225,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         }
     }
 
-    protected function resolveLabel(mixed $resource): void
+    public function resolveLabel(mixed $resource): void
     {
         if (isset($this->label)) {
             return;
