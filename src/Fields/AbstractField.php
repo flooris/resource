@@ -41,7 +41,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected mixed $value;
     protected array $sort = ['current' => null, 'next' => null];
     protected ?string $qualifiedAttribute = null;
-    protected null|FieldLink|FieldRoute|FieldAction $link = null;
+    protected ?FieldLink $link = null;
 
     public function __construct(protected string $name, null|string|callable $attribute = null)
     {
@@ -218,6 +218,10 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     {
         if ($this->link) {
             $this->link->resolve($resource);
+
+            if (! $this->link->getHref()) {
+                $this->link = null;
+            }
         }
     }
 
@@ -338,8 +342,8 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
             'name'        => $this->name,
             'attribute'   => $this->attribute,
             'label'       => $this->label,
-            'link'        => $this->link,
-            'value'       => $this->value,
+            'link'        => $this->link instanceof Arrayable ? $this->link->toArray() : $this->link,
+            'value'       => $this->value instanceof Arrayable ? $this->value->toArray() : $this->value,
             'searchable'  => $this->searchable,
             'sortable'    => $this->sortable,
             'placeholder' => $this->placeholder,

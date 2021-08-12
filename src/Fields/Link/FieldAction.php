@@ -12,7 +12,7 @@ class FieldAction extends AbstractFieldLink
 
     public function __construct(string|array $name, protected array $parameters = [], ?callable $callback = null)
     {
-        $this->initializeRoute($name)->initializeCallback();
+        $this->initializeRoute($name)->initializeCallback($callback);
     }
 
     private function initializeRoute(string|array $name): static

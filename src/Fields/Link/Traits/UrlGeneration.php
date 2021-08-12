@@ -7,6 +7,7 @@ use ReflectionClass;
 use Illuminate\Routing\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Routing\Exceptions\UrlGenerationException;
 
 trait UrlGeneration
 {
@@ -24,16 +25,25 @@ trait UrlGeneration
 
     public function resolve(mixed $resource): void
     {
-        $this->href = is_callable($this->callback)
-            ? tap($this->resolveRoute($resource), fn ($value) => call_user_func($this->callback, $value, $resource))
-            : $this->resolveRoute($resource);
+        if ($this->callback) {
+            tap($this->resolveRoute($resource), function (?string $href) use ($resource) {
+                $this->href = call_user_func($this->callback, $href, $resource);
+            });
+        } else {
+            $this->href = $this->resolveRoute($resource);
+        }
+
         $this->method = $this->route->methods[0];
         $this->name   = $this->route->getActionMethod();
     }
 
-    private function resolveRoute(mixed $resource): string
+    private function resolveRoute(mixed $resource): ?string
     {
-        return app('url')->toRoute($this->route, $this->resolveRouteParameters($resource, $this->parameters), true);
+        try {
+            return app('url')->toRoute($this->route, $this->resolveRouteParameters($resource, $this->parameters), true);
+        } catch (UrlGenerationException $e) {
+            return null;
+        }
     }
 
     private function resolveRouteParameters(mixed $resource, array $parameters = []): array

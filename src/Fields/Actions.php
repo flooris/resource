@@ -20,7 +20,7 @@ class Actions extends AbstractField
         parent::__construct($name, function (mixed $resource) {
             $this->links->each(function (FieldLink $link) use ($resource) {
                 $link->resolve($resource);
-            });
+            })->filter(fn(FieldLink $link) => $link->getHref());
 
             return $this->links;
         });

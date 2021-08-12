@@ -14,11 +14,11 @@ abstract class AbstractFieldLink implements FieldLink, JsonSerializable, Arrayab
 {
     use Make;
 
-    protected string $href;
+    protected ?string $href;
     protected string $method;
     protected string $name;
 
-    public function getHref(): string
+    public function getHref(): ?string
     {
         return $this->href;
     }
