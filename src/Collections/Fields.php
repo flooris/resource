@@ -80,4 +80,9 @@ class Fields extends Collection
     {
         return $this->filter(fn (Field $field) => $field->getSortable());
     }
+    
+    public function getAllowedSorts(): static
+    {
+        return $this->getSortable()->map(fn (Field $field) => $field->getAllowedSort())->filter();
+    }
 }

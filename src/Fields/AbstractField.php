@@ -182,9 +182,9 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this->component;
     }
 
-    public function getAllowedSort(): string|AllowedSort
+    public function getAllowedSort(): ?AllowedSort
     {
-        return $this->getQualifiedAttribute();
+        return $this->qualifiedAttribute ? AllowedSort::field($this->name, $this->qualifiedAttribute) : null;
     }
 
     public function getQualifiedAttribute(): ?string
@@ -288,14 +288,14 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         }
 
         $request = QueryBuilderRequest::fromRequest(app('request'));
-        $sort    = $request->sorts()->first(fn (string $sort) => str_ends_with($sort, $this->qualifiedAttribute));
+        $sort    = $request->sorts()->first(fn (string $sort) => str_ends_with($sort, $this->name));
 
         $this->sort = [
             'current' => $sort,
             'next'    => match (true) {
-                $sort && str_starts_with($sort, '-') => null,
-                $sort => '-' . $this->qualifiedAttribute,
-                default => $this->qualifiedAttribute,
+                $sort !== null && str_starts_with($sort, '-') => null,
+                $sort !== null => '-' . $this->name,
+                default => $this->name,
             },
         ];
     }

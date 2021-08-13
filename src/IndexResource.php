@@ -124,7 +124,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
 
         return $query
             ->allowedFilters($this->filters->getAllowedFilters()->toArray())
-            ->allowedSorts($this->fields->getSortable()->getQualifiedAttributes())
+            ->allowedSorts($this->fields->getAllowedSorts()->toArray())
             ->with($this->fields->getUniqueRelations()->toArray())
             ->withCount($this->fields->getRelationsToCount()->toArray())
             ->jsonPaginate()

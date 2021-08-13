@@ -27,4 +27,9 @@ class RelationCount extends AbstractField implements CountsRelationField
     {
         return $this->relationToCount;
     }
+
+    protected function resolveAttributeValue(mixed $resource): mixed
+    {
+        return data_get($resource, $this->attribute) ?: $resource?->{$this->relationToCount}?->count();
+    }
 }
