@@ -18,11 +18,11 @@ class Actions extends AbstractField
         $this->links = Collection::make();
 
         parent::__construct($name, function (mixed $resource) {
-            $this->links->each(function (FieldLink $link) use ($resource) {
+            return $this->links->each(function (FieldLink $link) use ($resource) {
                 $link->resolve($resource);
-            })->filter(fn(FieldLink $link) => $link->getHref());
-
-            return $this->links;
+            })
+                ->filter(fn (FieldLink $link) => $link->getHref())
+                ->values();
         });
 
         $this->label(__('entities.general.fields.actions.label'));
