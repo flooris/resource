@@ -14,7 +14,7 @@ abstract class AbstractFieldLink implements FieldLink, JsonSerializable, Arrayab
 {
     use Make;
 
-    protected ?string $href;
+    protected ?string $href = null;
     protected string $method;
     protected string $name;
 

@@ -7,11 +7,13 @@ use Flooris\Resource\Fields\Link\Traits\UrlGeneration;
 
 class FieldRoute extends AbstractFieldLink
 {
-   use UrlGeneration;
+    use UrlGeneration;
 
-    public function __construct(string $name, protected array $parameters = [],  ?callable $callback = null)
+    public function __construct(string $name, callable|array $parameters = [], ?callable $callback = null)
     {
-        $this->initializeRoute($name)->initializeCallback($callback);
+        $this->initializeRoute($name)
+            ->initizalizeParameters($parameters)
+            ->initializeCallback($callback);
     }
 
     private function initializeRoute(string $name): static

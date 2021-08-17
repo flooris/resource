@@ -35,14 +35,14 @@ class Actions extends AbstractField
         return $this;
     }
 
-    public function route(string $name, array $parameters = [], ?callable $callback = null): static
+    public function route(string $name, callable|array $parameters = [], ?callable $callback = null): static
     {
         $this->links->push(FieldRoute::make($name, $parameters, $callback));
 
         return $this;
     }
 
-    public function action(string|array $name, array $parameters = [], ?callable $callback = null): static
+    public function action(string|array $name, callable|array $parameters = [], ?callable $callback = null): static
     {
         $this->links->push(FieldAction::make($name, $parameters, $callback));
 

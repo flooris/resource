@@ -118,14 +118,14 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
-    public function route(string $name, array $parameters = [], ?callable $callback = null): static
+    public function route(string $name, callable|array $parameters = [], ?callable $callback = null): static
     {
         $this->link = FieldRoute::make($name, $parameters, $callback);
 
         return $this;
     }
 
-    public function action(string|array $name, array $parameters = [], ?callable $callback = null): static
+    public function action(string|array $name, callable|array $parameters = [], ?callable $callback = null): static
     {
         $this->link = FieldAction::make($name, $parameters, $callback);
 
@@ -216,13 +216,11 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     protected function resolveLink(mixed $resource): void
     {
-        if ($this->link) {
-            $this->link->resolve($resource);
-
-            if (! $this->link->getHref()) {
-                $this->link = null;
-            }
+        if ($this->link === null) {
+            return;
         }
+
+        $this->link->resolve($resource);
     }
 
     public function resolveLabel(mixed $resource): void
@@ -342,7 +340,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
             'name'        => $this->name,
             'attribute'   => $this->attribute,
             'label'       => $this->label,
-            'link'        => $this->link instanceof Arrayable ? $this->link->toArray() : $this->link,
+            'link'        => $this->link && $this->link->getHref() ? $this->link->toArray() : null,
             'value'       => $this->value instanceof Arrayable ? $this->value->toArray() : $this->value,
             'searchable'  => $this->searchable,
             'sortable'    => $this->sortable,

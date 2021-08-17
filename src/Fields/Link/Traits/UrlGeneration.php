@@ -12,6 +12,7 @@ use Illuminate\Routing\Exceptions\UrlGenerationException;
 trait UrlGeneration
 {
     protected Route $route;
+    protected Closure|array $parameters;
     protected ?Closure $callback = null;
 
     private function initializeCallback(?callable $callback = null): static
@@ -19,6 +20,13 @@ trait UrlGeneration
         if ($callback) {
             $this->callback = Closure::fromCallable($callback);
         }
+
+        return $this;
+    }
+
+    private function initizalizeParameters(callable|array $parameters): static
+    {
+        $this->parameters = is_callable($parameters) ? Closure::fromCallable($parameters) : $parameters;
 
         return $this;
     }
@@ -40,7 +48,12 @@ trait UrlGeneration
     private function resolveRoute(mixed $resource): ?string
     {
         try {
-            return app('url')->toRoute($this->route, $this->resolveRouteParameters($resource, $this->parameters), true);
+            return app('url')->toRoute($this->route, $this->resolveRouteParameters(
+                resource: $resource,
+                parameters: $this->parameters instanceof Closure
+                    ? call_user_func($this->parameters, $resource)
+                    : $this->parameters), true
+            );
         } catch (UrlGenerationException $e) {
             return null;
         }
@@ -62,11 +75,6 @@ trait UrlGeneration
         $relations          = $resource instanceof Model ? array_filter($resource->getRelations()) : [];
 
         foreach ($routableParameterModels as $key => $model) {
-            //            if ($resource instanceof ListModel && $model->getName() === $resource->modelClass()) {
-            //                $parameters[$key] = $resource->getRouteKey();
-            //                continue;
-            //            }
-
             if ($resource instanceof UrlRoutable && $model->isInstance($resource)) {
                 $parameters[$key] = $resource->getRouteKey();
                 continue;

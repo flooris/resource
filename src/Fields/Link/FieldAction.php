@@ -10,9 +10,11 @@ class FieldAction extends AbstractFieldLink
 {
     use UrlGeneration;
 
-    public function __construct(string|array $name, protected array $parameters = [], ?callable $callback = null)
+    public function __construct(string|array $name, callable|array $parameters = [], ?callable $callback = null)
     {
-        $this->initializeRoute($name)->initializeCallback($callback);
+        $this->initializeRoute($name)
+            ->initizalizeParameters($parameters)
+            ->initializeCallback($callback);
     }
 
     private function initializeRoute(string|array $name): static
