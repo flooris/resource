@@ -43,6 +43,8 @@ trait UrlGeneration
 
         $this->method = $this->route->methods[0];
         $this->name   = $this->route->getActionMethod();
+
+        parent::resolve($resource);
     }
 
     private function resolveRoute(mixed $resource): ?string

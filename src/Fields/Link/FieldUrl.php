@@ -23,5 +23,7 @@ class FieldUrl extends AbstractFieldLink
         if ($this->callback) {
             $this->href = call_user_func($this->callback, $resource);
         }
+
+        parent::resolve($resource);
     }
 }

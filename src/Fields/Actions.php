@@ -28,23 +28,23 @@ class Actions extends AbstractField
         $this->label(__('entities.general.fields.actions.label'));
     }
 
-    public function link(string|callable $href, string $name, string $method = 'GET'): static
+    public function link(string|callable|FieldUrl $href, string $name = '', string $method = 'GET'): static
     {
-        $this->links->push(FieldUrl::make($href, $name, $method));
+        $this->links->push($href instanceof FieldUrl ? $href : FieldUrl::make($href, $name, $method));
 
         return $this;
     }
 
-    public function route(string $name, callable|array $parameters = [], ?callable $callback = null): static
+    public function route(string|FieldRoute $name, callable|array $parameters = [], ?callable $callback = null): static
     {
-        $this->links->push(FieldRoute::make($name, $parameters, $callback));
+        $this->links->push($name instanceof FieldRoute ? $name : FieldRoute::make($name, $parameters, $callback));
 
         return $this;
     }
 
-    public function action(string|array $name, callable|array $parameters = [], ?callable $callback = null): static
+    public function action(string|array|FieldAction $name, callable|array $parameters = [], ?callable $callback = null): static
     {
-        $this->links->push(FieldAction::make($name, $parameters, $callback));
+        $this->links->push($name instanceof FieldAction ? $name : FieldAction::make($name, $parameters, $callback));
 
         return $this;
     }
