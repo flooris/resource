@@ -139,7 +139,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         return match (true) {
             $this->subject instanceof Model => $this->subject,
             $this->subject instanceof Builder => $this->subject->getModel(),
-            $this->subject instanceof Relation => $this->subject->getChild(),
+            $this->subject instanceof Relation => $this->subject->getRelated(),
             default => null,
         };
     }
