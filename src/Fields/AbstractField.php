@@ -29,6 +29,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected ?string $relation = null;
     protected ?Closure $computedCallback = null;
     protected ?Closure $resolveCallback = null;
+    protected ?Closure $visibileCallback = null;
 
     protected string $component = '';
     protected bool $searchable = false;
@@ -37,6 +38,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected null|string|bool $placeholder = null;
     protected bool $required = false;
     protected bool $editable = true;
+    protected bool $visibile = true;
 
     protected mixed $value;
     protected array $sort = ['current' => null, 'next' => null];
@@ -132,6 +134,13 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
+    public function visibile(callable $callback): static
+    {
+        $this->visibileCallback = Closure::fromCallable($callback);
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -192,13 +201,29 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this->qualifiedAttribute;
     }
 
+    public function getVisibile(): bool
+    {
+        return $this->visibile;
+    }
+
     public function resolve(mixed $resource): void
     {
-        $this->resolveValue($resource);
-        $this->resolveLink($resource);
-        $this->resolveLabel($resource);
-        $this->resolvePlaceholder($resource);
-        $this->resolveSort();
+        $this->resolveVisibile($resource);
+
+        if ($this->visibile === true) {
+            $this->resolveValue($resource);
+            $this->resolveLink($resource);
+            $this->resolveLabel($resource);
+            $this->resolvePlaceholder($resource);
+            $this->resolveSort();
+        }
+    }
+
+    protected function resolveVisibile(mixed $resource): void
+    {
+        if ($this->visibileCallback !== null) {
+            $this->visibile = $this->value = call_user_func($this->visibileCallback, $resource);
+        }
     }
 
     protected function resolveValue(mixed $resource): void

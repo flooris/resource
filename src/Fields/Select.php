@@ -5,11 +5,19 @@ namespace Flooris\Resource\Fields;
 class Select extends AbstractField
 {
     public string $component = 'SelectField';
-    public array $options = [];
+    protected array $options = [];
+    protected bool $multiple = false;
 
     public function options(array $options): static
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    public function multiple(bool $multiple = true): static
+    {
+        $this->multiple = $multiple;
 
         return $this;
     }
@@ -19,10 +27,16 @@ class Select extends AbstractField
         return $this->options;
     }
 
+    public function getMultiple(): bool
+    {
+        return $this->multiple;
+    }
+
     public function toArray(): array
     {
         return array_merge(parent::toArray(), [
-            'options' => $this->options,
+            'options'  => $this->options,
+            'multiple' => $this->multiple,
         ]);
     }
 }

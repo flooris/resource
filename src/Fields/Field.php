@@ -24,6 +24,8 @@ interface Field
 
     public function getQualifiedAttribute(): ?string;
 
+    public function getVisibile(): bool;
+
     public function resolve(mixed $resource): void;
 
     public function resolveQualifiedAttribute(mixed $model): void;

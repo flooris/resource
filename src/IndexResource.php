@@ -69,8 +69,11 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
 
     protected function initializeFields(): static
     {
+        $model = $this->getModel();
+
         $this->fields = Fields::make($this->fields())
-            ->resolveQualifiedAttributes($this->getModel());
+            ->resolveQualifiedAttributes($model)
+            ->resolve($model);
 
         return $this;
     }

@@ -27,7 +27,7 @@ class Fields extends Collection
     {
         return $this->each(function (Field $field) use ($resource) {
             $field->resolve($resource);
-        });
+        })->filter(fn(Field $field) => $field->getVisibile());
     }
     
     public function resolveLabels(mixed $resource): static
