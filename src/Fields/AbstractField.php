@@ -141,6 +141,13 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
+    public function component(string $component): static
+    {
+        $this->component = $component;
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;

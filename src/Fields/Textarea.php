@@ -4,5 +4,5 @@ namespace Flooris\Resource\Fields;
 
 class Textarea extends AbstractField
 {
-    public string $component = 'TextareaField';
+    protected string $component = 'TextareaField';
 }

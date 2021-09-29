@@ -6,6 +6,6 @@ use DateTimeInterface;
 
 class Date extends DateTime
 {
-    public string $component = 'DateField';
+    protected string $component = 'DateField';
     protected string $format = "d-m-Y";
 }

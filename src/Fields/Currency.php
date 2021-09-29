@@ -6,8 +6,7 @@ use Flooris\LaravelMoney\Money;
 
 class Currency extends AbstractField
 {
-    public string $component = 'CurrencyField';
-
+    protected string $component = 'CurrencyField';
 
     public function __construct(string $name, null|string|callable $attribute = null, ?string $label = null)
     {

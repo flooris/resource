@@ -4,7 +4,7 @@ namespace Flooris\Resource\Fields;
 
 class Select extends AbstractField
 {
-    public string $component = 'SelectField';
+    protected string $component = 'SelectField';
     protected array $options = [];
     protected bool $multiple = false;
 
