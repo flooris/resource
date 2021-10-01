@@ -113,8 +113,12 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
-    public function link(string|callable|FieldUrl $href, string $name = '', string $method = 'GET'): static
+    public function link(null|string|callable|FieldUrl $href, string $name = '', string $method = 'GET'): static
     {
+        if ($href === null) {
+            $this->link = $href;
+        }
+
         $this->link = $href instanceof FieldUrl ? $href : FieldUrl::make($href, $name, $method);
 
         return $this;

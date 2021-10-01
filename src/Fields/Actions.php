@@ -28,9 +28,11 @@ class Actions extends AbstractField
         $this->label(__('entities.general.fields.actions.label'));
     }
 
-    public function link(string|callable|FieldUrl $href, string $name = '', string $method = 'GET'): static
+    public function link(null|string|callable|FieldUrl $href, string $name = '', string $method = 'GET'): static
     {
-        $this->links->push($href instanceof FieldUrl ? $href : FieldUrl::make($href, $name, $method));
+        if ($href !== null) {
+            $this->links->push($href instanceof FieldUrl ? $href : FieldUrl::make($href, $name, $method));
+        }
 
         return $this;
     }
