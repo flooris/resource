@@ -10,7 +10,6 @@ use Flooris\Resource\Fields\Link\FieldAction;
 
 class Actions extends AbstractField
 {
-    protected string $component = 'ActionsField';
     protected Collection $links;
 
     public function __construct(string $name = 'actions')

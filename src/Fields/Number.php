@@ -4,7 +4,6 @@ namespace Flooris\Resource\Fields;
 
 class Number extends AbstractField
 {
-    protected string $component = 'NumberField';
     protected int|float|null $step = null;
     protected ?int $min = null;
     protected ?int $max = null;

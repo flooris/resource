@@ -6,7 +6,6 @@ use DateTimeInterface;
 
 class DateTime extends AbstractField
 {
-    protected string $component = 'DateTimeField';
     protected string $format = "d-m-Y H:i:s";
 
     public function __construct(string $name, null|string|callable $attribute = null, ?string $label = null)

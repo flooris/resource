@@ -4,7 +4,6 @@ namespace Flooris\Resource\Fields;
 
 class Badge extends AbstractField
 {
-    protected string $component = 'BadgeField';
     protected array $labels = [];
     protected array $colors = [];
 

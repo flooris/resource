@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Flooris\Resource\Fields;
-
 
 interface CountsRelationField
 {

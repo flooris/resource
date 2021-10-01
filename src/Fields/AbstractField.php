@@ -31,7 +31,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected ?Closure $resolveCallback = null;
     protected ?Closure $visibileCallback = null;
 
-    protected string $component = '';
+    protected string $component;
     protected bool $searchable = false;
     protected bool $sortable = false;
     protected mixed $default = null;
@@ -47,8 +47,11 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     public function __construct(protected string $name, null|string|callable $attribute = null)
     {
-        $attribute = $attribute ?: $name;
+        $this->initializeAttribute($attribute ?: $name)->initializeComponent();
+    }
 
+    private function initializeAttribute(string|callable $attribute): static
+    {
         if (is_callable($attribute)) {
             $this->attribute        = static::COMPUTED_FIELD;
             $this->computedCallback = Closure::fromCallable($attribute);
@@ -62,6 +65,17 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
                 $this->column = $attribute;
             }
         }
+
+        return $this;
+    }
+
+    private function initializeComponent(): static
+    {
+        $className = static::class;
+
+        $this->component = config("resource.field_components.$className");
+
+        return $this;
     }
 
     public function label(string $label): static

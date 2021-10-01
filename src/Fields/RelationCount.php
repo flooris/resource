@@ -6,8 +6,6 @@ use Illuminate\Support\Str;
 
 class RelationCount extends AbstractField implements CountsRelationField
 {
-    protected string $component = 'RelationCountField';
-
     protected string $relationToCount;
 
     public function __construct(string $name, null|string $relation = null, ?string $label = null)
