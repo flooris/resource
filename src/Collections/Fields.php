@@ -27,9 +27,16 @@ class Fields extends Collection
     {
         return $this->each(function (Field $field) use ($resource) {
             $field->resolve($resource);
-        })->filter(fn(Field $field) => $field->getVisibile());
+        })->filter(fn(Field $field) => $field->getVisible());
     }
-    
+
+    public function resolveVisible(mixed $resource): static
+    {
+        return $this->each(function (Field $field) use ($resource) {
+            $field->resolveVisible($resource);
+        })->filter(fn(Field $field) => $field->getVisible());
+    }
+
     public function resolveLabels(mixed $resource): static
     {
         return $this->each(function (Field $field) use ($resource) {
@@ -80,7 +87,7 @@ class Fields extends Collection
     {
         return $this->filter(fn (Field $field) => $field->getSortable());
     }
-    
+
     public function getAllowedSorts(): static
     {
         return $this->getSortable()->map(fn (Field $field) => $field->getAllowedSort())->filter();

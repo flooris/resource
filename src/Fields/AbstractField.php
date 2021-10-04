@@ -29,16 +29,16 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected ?string $relation = null;
     protected ?Closure $computedCallback = null;
     protected ?Closure $resolveCallback = null;
-    protected ?Closure $visibileCallback = null;
+    protected ?Closure $visibleCallback = null;
 
-    protected string $component;
+    protected string $component = '';
     protected bool $searchable = false;
     protected bool $sortable = false;
     protected mixed $default = null;
     protected null|string|bool $placeholder = null;
     protected bool $required = false;
     protected bool $editable = true;
-    protected bool $visibile = true;
+    protected bool $visible = true;
 
     protected mixed $value;
     protected array $sort = ['current' => null, 'next' => null];
@@ -47,11 +47,8 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     public function __construct(protected string $name, null|string|callable $attribute = null)
     {
-        $this->initializeAttribute($attribute ?: $name)->initializeComponent();
-    }
+        $attribute = $attribute ?: $name;
 
-    private function initializeAttribute(string|callable $attribute): static
-    {
         if (is_callable($attribute)) {
             $this->attribute        = static::COMPUTED_FIELD;
             $this->computedCallback = Closure::fromCallable($attribute);
@@ -65,17 +62,6 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
                 $this->column = $attribute;
             }
         }
-
-        return $this;
-    }
-
-    private function initializeComponent(): static
-    {
-        $className = static::class;
-
-        $this->component = config("resource.field_components.$className");
-
-        return $this;
     }
 
     public function label(string $label): static
@@ -152,9 +138,9 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
-    public function visibile(callable $callback): static
+    public function visible(callable $callback): static
     {
-        $this->visibileCallback = Closure::fromCallable($callback);
+        $this->visibleCallback = Closure::fromCallable($callback);
 
         return $this;
     }
@@ -226,16 +212,16 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this->qualifiedAttribute;
     }
 
-    public function getVisibile(): bool
+    public function getVisible(): bool
     {
-        return $this->visibile;
+        return $this->visible;
     }
 
     public function resolve(mixed $resource): void
     {
-        $this->resolveVisibile($resource);
+        $this->resolveVisible($resource);
 
-        if ($this->visibile === true) {
+        if ($this->visible === true) {
             $this->resolveValue($resource);
             $this->resolveLink($resource);
             $this->resolveLabel($resource);
@@ -244,10 +230,10 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         }
     }
 
-    protected function resolveVisibile(mixed $resource): void
+    public function resolveVisible(mixed $resource): void
     {
-        if ($this->visibileCallback !== null) {
-            $this->visibile = $this->value = call_user_func($this->visibileCallback, $resource);
+        if ($this->visibleCallback !== null) {
+            $this->visible = $this->value = call_user_func($this->visibleCallback, $resource);
         }
     }
 

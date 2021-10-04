@@ -72,8 +72,8 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         $model = $this->getModel();
 
         $this->fields = Fields::make($this->fields())
-            ->resolveQualifiedAttributes($model)
-            ->resolve($model);
+            ->resolveVisible($model)
+            ->resolveQualifiedAttributes($model);
 
         return $this;
     }
