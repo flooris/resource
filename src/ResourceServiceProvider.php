@@ -9,7 +9,7 @@ class ResourceServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/resource.php.php' => config_path('resource.php'),
+            __DIR__.'/../config/resource.php' => config_path('resource.php'),
         ]);
     }
 
