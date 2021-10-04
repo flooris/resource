@@ -29,5 +29,12 @@
         "psr-4": {
             "Flooris\\Resource\\": "src"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Flooris\\Resource\\ResourceServiceProvider"
+            ]
+        }
     }
 }
