@@ -7,6 +7,7 @@ use JsonSerializable;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Flooris\Resource\Traits\Make;
+use Flooris\Resource\Collections\Actions;
 use Spatie\QueryBuilder\QueryBuilder;
 use Kirschbaum\PowerJoins\PowerJoins;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,6 @@ use Flooris\Resource\Collections\Filters;
 use Flooris\Resource\Interfaces\Makeable;
 use Flooris\Resource\Filters\SearchFilter;
 use Spatie\QueryBuilder\QueryBuilderRequest;
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Flooris\Resource\Filters\TrashedFilter;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -35,6 +35,8 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
 
     protected Fields $fields;
     protected Filters $filters;
+    protected Actions $actions;
+
     protected array $additional = [];
 
     protected LengthAwarePaginator $result;
@@ -44,7 +46,8 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         $this->initializeSubject($subject)
             ->initializeRequest($request)
             ->initializeFields()
-            ->initializeFilters();
+            ->initializeFilters()
+            ->initializeActions();
     }
 
     protected function initializeSubject(mixed $subject): static
@@ -63,6 +66,16 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
     protected function initializeRequest(?Request $request): static
     {
         $this->request = $request ?? app(Request::class);
+
+        return $this;
+    }
+
+    protected function initializeActions(): static
+    {
+        $model = $this->getModel();
+
+        $this->actions = Actions::make($this->actions())
+            ->resolve($model);
 
         return $this;
     }
@@ -101,6 +114,11 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
     }
 
     public function filters(): array
+    {
+        return [];
+    }
+
+    public function actions(): array
     {
         return [];
     }
@@ -195,6 +213,7 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         $this->resolve();
 
         return array_merge([
+            'actions'    => $this->actions,
             'collection' => $this->result->getCollection(),
             'columns'    => $this->fields->resolveLabels($this->getModel())->toColumn(),
             'pagination' => $this->pagination(),
