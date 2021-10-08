@@ -12,10 +12,12 @@ use Flooris\Resource\Fields\Link\FieldUrl;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Flooris\Resource\Fields\Link\FieldLink;
 use Flooris\Resource\Fields\Link\FieldRoute;
+use Spatie\QueryBuilder\Enums\SortDirection;
 use Flooris\Resource\Fields\Link\FieldAction;
 use Illuminate\Contracts\Support\Arrayable;
 use Flooris\Resource\Interfaces\Makeable;
 use Illuminate\Contracts\Support\Responsable;
+use Spatie\QueryBuilder\Exceptions\InvalidDirection;
 
 abstract class AbstractField implements Field, JsonSerializable, Arrayable, Responsable, Makeable
 {
@@ -42,6 +44,10 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     protected mixed $value;
     protected array $sort = ['current' => null, 'next' => null];
+    protected string $sortDefaultDirection = SortDirection::ASCENDING;
+    protected bool $defaultSort = false;
+    protected int $defaultSortPriority = 0;
+
     protected ?string $qualifiedAttribute = null;
     protected ?FieldLink $link = null;
 
@@ -80,7 +86,6 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     }
 
 
-
     public function label(string $label): static
     {
         $this->label = $label;
@@ -102,9 +107,17 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
-    public function sortable(bool $sortable = true): static
+    public function sortable($defaultDirection = SortDirection::ASCENDING): static
     {
-        $this->sortable = $sortable;
+        if (! in_array($defaultDirection, [
+            SortDirection::ASCENDING,
+            SortDirection::DESCENDING,
+        ], true)) {
+            throw InvalidDirection::make($defaultDirection);
+        }
+
+        $this->sortable             = true;
+        $this->sortDefaultDirection = $defaultDirection;
 
         return $this;
     }
@@ -171,6 +184,14 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
+    public function defaultSort($priority = 0)
+    {
+        $this->defaultSort         = true;
+        $this->defaultSortPriority = $priority;
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -223,7 +244,10 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     public function getAllowedSort(): ?AllowedSort
     {
-        return $this->qualifiedAttribute ? AllowedSort::field($this->name, $this->qualifiedAttribute) : null;
+        return $this->qualifiedAttribute
+            ? AllowedSort::field($this->name, $this->qualifiedAttribute)
+                ->defaultDirection($this->sortDefaultDirection)
+            : null;
     }
 
     public function getQualifiedAttribute(): ?string
@@ -234,6 +258,16 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     public function getVisible(): bool
     {
         return $this->visible;
+    }
+
+    public function getDefaultSort(): bool
+    {
+        return $this->defaultSort;
+    }
+
+    public function getDefaultSortPriority(): int
+    {
+        return $this->defaultSortPriority;
     }
 
     public function resolve(mixed $resource): void

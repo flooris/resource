@@ -92,4 +92,13 @@ class Fields extends Collection
     {
         return $this->getSortable()->map(fn (Field $field) => $field->getAllowedSort())->filter();
     }
+
+    public function getDefaultSorts(): static
+    {
+        return $this->getSortable()
+            ->filter(fn (Field $field) => $field->getDefaultSort())
+            ->sort(fn(Field $field) => $field->getDefaultSortPriority())
+            ->map(fn (Field $field) => $field->getAllowedSort())
+            ->filter();
+    }
 }

@@ -144,10 +144,11 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         });
 
         return $query
-            ->allowedFilters($this->filters->getAllowedFilters()->toArray())
-            ->allowedSorts($this->fields->getAllowedSorts()->toArray())
-            ->with($this->fields->getUniqueRelations()->toArray())
-            ->withCount($this->fields->getRelationsToCount()->toArray())
+            ->allowedFilters($this->filters->getAllowedFilters()->all())
+            ->allowedSorts($this->fields->getAllowedSorts()->all())
+            ->with($this->fields->getUniqueRelations()->all())
+            ->withCount($this->fields->getRelationsToCount()->all())
+            ->defaultSorts($this->fields->getDefaultSorts()->all())
             ->jsonPaginate()
             ->through(fn (mixed $resource) => [
                 'resource' => $resource,
