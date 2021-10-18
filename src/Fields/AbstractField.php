@@ -39,8 +39,8 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected mixed $default = null;
     protected null|string|bool $placeholder = null;
     protected bool $required = false;
-    protected bool $editable = true;
     protected bool $visible = true;
+    protected bool $disabled = false;
 
     protected mixed $value;
     protected array $sort = ['current' => null, 'next' => null];
@@ -184,10 +184,17 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
-    public function defaultSort($priority = 0)
+    public function defaultSort($priority = 0): static
     {
         $this->defaultSort         = true;
         $this->defaultSortPriority = $priority;
+
+        return $this;
+    }
+
+    public function disabled($disabled = true): static
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }
@@ -268,6 +275,11 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     public function getDefaultSortPriority(): int
     {
         return $this->defaultSortPriority;
+    }
+
+    public function getDisabled(): bool
+    {
+        return $this->disabled;
     }
 
     public function resolve(mixed $resource): void
@@ -436,6 +448,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
             'placeholder' => $this->placeholder,
             'required'    => $this->required,
             'sort'        => $this->sort,
+            'disabled'    => $this->disabled,
         ];
     }
 
