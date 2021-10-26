@@ -18,6 +18,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Flooris\Resource\Interfaces\Makeable;
 use Illuminate\Contracts\Support\Responsable;
 use Spatie\QueryBuilder\Exceptions\InvalidDirection;
+use Spatie\QueryBuilder\Sorts\Sort;
 
 abstract class AbstractField implements Field, JsonSerializable, Arrayable, Responsable, Makeable
 {
@@ -46,6 +47,7 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
     protected array $sort = ['current' => null, 'next' => null];
     protected string $sortDefaultDirection = SortDirection::ASCENDING;
     protected bool $defaultSort = false;
+    protected ?Sort $customSort = null;
     protected int $defaultSortPriority = 0;
 
     protected ?string $qualifiedAttribute = null;
@@ -192,6 +194,13 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
         return $this;
     }
 
+    public function customSort(Sort $sort): static
+    {
+        $this->customSort = $sort;
+
+        return $this;
+    }
+
     public function disabled($disabled = true): static
     {
         $this->disabled = $disabled;
@@ -251,10 +260,17 @@ abstract class AbstractField implements Field, JsonSerializable, Arrayable, Resp
 
     public function getAllowedSort(): ?AllowedSort
     {
-        return $this->qualifiedAttribute
-            ? AllowedSort::field($this->name, $this->qualifiedAttribute)
-                ->defaultDirection($this->sortDefaultDirection)
-            : null;
+        if ($this->qualifiedAttribute === null) {
+            return null;
+        }
+
+        if ($this->customSort === null) {
+            return AllowedSort::field($this->name, $this->qualifiedAttribute)
+                ->defaultDirection($this->sortDefaultDirection);
+        }
+
+        return AllowedSort::custom($this->name, $this->customSort, $this->qualifiedAttribute)
+            ->defaultDirection($this->sortDefaultDirection);
     }
 
     public function getQualifiedAttribute(): ?string
