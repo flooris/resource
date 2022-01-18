@@ -111,7 +111,7 @@ abstract class AbstractFilter implements Filter, JsonSerializable, Arrayable, Re
     {
         $allowedFilter = $this->allowedFilter();
 
-        if ($this->default) {
+        if ($this->default !== null) {
             $allowedFilter->default($this->default);
         }
 
