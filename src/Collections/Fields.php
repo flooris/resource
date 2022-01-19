@@ -69,7 +69,7 @@ class Fields extends Collection
     public function getUniqueRelations(): static
     {
         return $this->getRelations()->reject(fn (string $relation, string $key) => $this->getRelations()
-            ->contains(fn (string $oRelation, string $oKey) => $oKey !== $key && str_starts_with($oRelation, $relation)));
+            ->contains(fn (string $oRelation, string $oKey) => $oKey !== $key && $oRelation === $relation));
     }
 
     public function getRelationsToCount(): static
