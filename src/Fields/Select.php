@@ -7,7 +7,7 @@ use http\Exception\InvalidArgumentException;
 class Select extends AbstractField
 {
     public const MODE_SINGLE = 'single';
-    public const MODE_MUTIPLE = 'mutiple';
+    public const MODE_MULTIPLE = 'multiple';
     public const MODE_TAGS = 'tags';
 
     protected string $mode = 'single';
@@ -16,8 +16,8 @@ class Select extends AbstractField
 
     public function mode(string $mode = self::MODE_SINGLE): static
     {
-        if (! in_array($mode, [static::MODE_SINGLE, static::MODE_MUTIPLE, static::MODE_TAGS])) {
-            throw new InvalidArgumentException("Mode can only be 'single', 'mutiple' or 'tags'.");
+        if (! in_array($mode, [static::MODE_SINGLE, static::MODE_MULTIPLE, static::MODE_TAGS])) {
+            throw new InvalidArgumentException("Mode can only be 'single', 'multiple' or 'tags'.");
         }
 
         $this->mode = $mode;
