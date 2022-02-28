@@ -68,8 +68,11 @@ class Fields extends Collection
 
     public function getUniqueRelations(): static
     {
-        return $this->getRelations()->reject(fn (string $relation, string $key) => $this->getRelations()
-            ->contains(fn (string $oRelation, string $oKey) => $oKey !== $key && $oRelation === $relation));
+        return $this->getRelations()->reject(
+            fn (string $v): bool => $this->getRelations()->contains(
+                fn (string $oV): bool => $oV !== $v && str_starts_with($oV, $v)
+            )
+        );
     }
 
     public function getRelationsToCount(): static
