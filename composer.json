@@ -20,7 +20,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.0",
-        "illuminate/config": "^7.0|^8.0|^9.0|^10.0",
+        "illuminate/config": "^7.0|^8.0|^9.0|^10.0|^11.0",
         "kirschbaum-development/eloquent-power-joins": "^2.4|^3.5",
         "spatie/laravel-json-api-paginate": "^1.10",
         "spatie/laravel-query-builder": "^3.3|^5.0.0|^6.2.1",
