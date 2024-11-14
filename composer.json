@@ -24,7 +24,7 @@
         "kirschbaum-development/eloquent-power-joins": "^2.4|^3.5",
         "spatie/laravel-json-api-paginate": "^1.10",
         "spatie/laravel-query-builder": "^3.3|^5.0.0|^6.2.1",
-        "flooris/laravel-money": "^0.1|0.2|0.3"
+        "flooris/laravel-money": "^0.1|0.2|0.3|0.4"
     },
     "config": {
         "sort-packages": true
