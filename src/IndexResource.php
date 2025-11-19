@@ -56,10 +56,6 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
                 ? new static::$subjectClass()
                 : throw new InvalidArgumentException('Either subject or subjectClass should be set'));
 
-        if (! $this->subjectUsesPowerJoins()) {
-            throw new InvalidArgumentException('The subject model should use the PowerJoin trait');
-        }
-
         return $this;
     }
 
@@ -137,7 +133,11 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
 
     protected function query()
     {
-        $query = Querybuilder::for($this->subject, $this->request);
+        if ($this->subject instanceof Model) {
+            $query = Querybuilder::for($this->subject::class, $this->request);
+        } else {
+            $query = Querybuilder::for($this->subject, $this->request);
+        }
 
         $this->fields->getUniqueRelations()->each(function (string $relation) use ($query) {
             $query->leftJoinRelationship($relation);
@@ -171,13 +171,6 @@ class IndexResource implements JsonSerializable, Arrayable, Makeable
         $model = $this->getModel();
 
         return $model && in_array(SoftDeletes::class, class_uses_recursive($model), true);
-    }
-
-    protected function subjectUsesPowerJoins(): bool
-    {
-        $model = $this->getModel();
-
-        return $model && in_array(PowerJoins::class, class_uses_recursive($model), true);
     }
 
     protected function pagination(): array
